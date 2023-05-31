@@ -22,6 +22,12 @@
         "command": "hutte.getOrgFromPool",
         "title": "Get Org From Pool",
         "category": "Hutte"
+      },
+      {
+        "command": "hutte.getOrg",
+        "title": "Get Org",
+        "category": "Hutte",
+        "enablement": ""
       }
     ]
   },
