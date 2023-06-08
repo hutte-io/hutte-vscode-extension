@@ -9,7 +9,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+		"*"
+	],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -27,8 +29,75 @@
         "command": "hutte.getOrg",
         "title": "Get Org",
         "category": "Hutte"
-      }
-    ]
+      },
+      {
+				"command": "hutteOrgs.refreshEntry",
+				"title": "Refresh",
+				"icon": {
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
+				}
+			},
+			{
+				"command": "hutteOrgs.takeFromPool",
+				"title": "Take From Pool"
+			},
+			{
+				"command": "hutteOrgs.authorize",
+				"title": "Authorize",
+				"icon": {
+					"light": "resources/light/login.svg",
+					"dark": "resources/dark/login.svg"
+				}
+			},
+			{
+				"command": "hutteOrgs.openOnHutte",
+				"title": "Open on Hutte"
+			}
+    ],
+    "viewsContainers": {
+			"activitybar": [
+				{
+					"id": "package-explorer",
+					"title": "Hutte",
+					"icon": "media/Hutte_Logo_Flat.svg"
+				}
+			]
+		},
+		"views": {
+			"package-explorer": [
+				{
+					"id": "hutteOrgs",
+					"name": "Project view",
+					"icon": "media/Hutte_Logo_Flat.svg",
+					"contextualTitle": "Hutte"
+				}
+			]
+		},
+    "menus": {
+			"view/title": [
+				{
+					"command": "hutteOrgs.refreshEntry",
+					"when": "view == hutteOrgs",
+					"group": "navigation"
+				},
+				{
+					"command": "hutteOrgs.takeFromPool",
+					"when": "view == hutteOrgs"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "hutteOrgs.authorize",
+					"when": "view == hutteOrgs",
+					"group": "inline"
+				},
+				{
+					"command": "hutteOrgs.openOnHutte",
+					"when": "view == hutteOrgs"
+				}
+			]
+		}
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",

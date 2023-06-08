@@ -1,11 +1,30 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { commandSync } from "execa";
+// import { DepNodeProvider, Dependency } from './nodeDependencies';
+import { HutteOrgsProvider, HutteOrg } from './hutteOrgsProvider';
+import { commandSync,  } from "execa";
+
+let myStatusBarItem: vscode.StatusBarItem;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
+		? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
+
+	const hutteOrgsProvider = new HutteOrgsProvider(rootPath);
+	// vscode.window.registerTreeDataProvider('nodeDependencies', nodeDependenciesProvider);
+	vscode.window.createTreeView('hutteOrgs', {
+		treeDataProvider: hutteOrgsProvider
+	  });
+	vscode.commands.registerCommand('hutteOrgs.refreshEntry', () => vscode.window.showInformationMessage(`Successfully called refresh`));
+	// vscode.commands.registerCommand('extension.openPackageOnNpm', moduleName => vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://www.npmjs.com/package/${moduleName}`)));
+	vscode.commands.registerCommand('hutteOrgs.takeFromPool', () => vscode.window.showInformationMessage(`Successfully called take from pool.`));
+	vscode.commands.registerCommand('hutteOrgs.authorize', async (hutteOrg: HutteOrg) => await authorizeOrg(hutteOrg.label));
+	vscode.commands.registerCommand('hutteOrgs.openOnHutte', hutteOrg => {
+		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${hutteOrg.globalId}`));
+	});
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('hutte.login', async () => {
@@ -51,21 +70,64 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('hutte.getOrg', async () => {
-			const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
-			vscodeOutput.show();
-
-			let output;
-			try {
-				output = await commandSync(`echo | sfdx hutte:org:authorize`);
-				vscode.window.showInformationMessage('Hutte: Successfully Set Org');
-				vscodeOutput.appendLine('Hutte: Successfully Set Org');
-			} catch(err: any) {
-				vscode.window.showErrorMessage(err.message);
-				vscodeOutput.appendLine(err.message);
-			}
+			// @TODO: Get org name from user list selection
+			authorizeOrg('');
 		})
 	);
+
+	const myCommandId = 'sample.showSelectionCount';
+	context.subscriptions.push(vscode.commands.registerCommand(myCommandId, (n) => {
+		vscode.window.showInformationMessage(`Hutte Sample, ${n} line(s) selected... Keep going!`);
+	}));
+
+	// create a new status bar item that we can now manage
+	myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+	myStatusBarItem.command = myCommandId;
+	context.subscriptions.push(myStatusBarItem);
+
+	// register some listener that make sure the status bar 
+	// item always up-to-date
+	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(updateStatusBarItem));
+	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(updateStatusBarItem));
+
+	// update status bar item once at start
+	updateStatusBarItem();
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
+
+async function authorizeOrg(orgName?: string) {
+	// @TODO: Change to progress messgae
+	vscode.window.showInformationMessage('Authorising Hutte Org...');
+	const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
+	vscodeOutput.show();
+
+	let output;
+	try {
+		output = commandSync(`echo "${orgName}" | sfdx hutte:org:authorize`, {shell: true});
+		vscode.window.showInformationMessage('Hutte: Successfully Set Org');
+		vscodeOutput.appendLine('Hutte: Successfully Set Org');
+	} catch(err: any) {
+		vscode.window.showErrorMessage(err.message);
+		vscodeOutput.appendLine(err.message);
+	}
+}
+
+function updateStatusBarItem(): void {
+	const n = getNumberOfSelectedLines(vscode.window.activeTextEditor);
+	if (n > 0) {
+		myStatusBarItem.text = `$(megaphone) Hutte Sample, ${n} line(s) selected`;
+		myStatusBarItem.show();
+	} else {
+		myStatusBarItem.hide();
+	}
+}
+
+function getNumberOfSelectedLines(editor: vscode.TextEditor | undefined): number {
+	let lines = 0;
+	if (editor) {
+		lines = editor.selections.reduce((prev, curr) => prev + (curr.end.line - curr.start.line), 0);
+	}
+	return lines;
+}
