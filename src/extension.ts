@@ -19,8 +19,10 @@ export function activate(context: vscode.ExtensionContext) {
 		treeDataProvider: hutteOrgsProvider
 	  });
 	vscode.commands.registerCommand('hutteOrgs.refreshEntry', () => hutteOrgsProvider.refresh());
-	// vscode.commands.registerCommand('extension.openPackageOnNpm', moduleName => vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://www.npmjs.com/package/${moduleName}`)));
-	vscode.commands.registerCommand('hutteOrgs.takeFromPool', () => vscode.window.showInformationMessage(`Successfully called take from pool.`));
+	vscode.commands.registerCommand('hutteOrgs.activateFromPool', async () => {
+		await activateFromPool();
+		hutteOrgsProvider.refresh();
+	});
 	vscode.commands.registerCommand('hutteOrgs.authorize', async (hutteOrg: HutteOrg) => await authorizeOrg(hutteOrg.label));
 	vscode.commands.registerCommand('hutteOrgs.openOnHutte', hutteOrg => {
 		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${hutteOrg.globalId}`));
@@ -51,20 +53,8 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand('hutte.getOrgFromPool', async () => {
-			const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
-			vscodeOutput.show();
-
-			let output;
-			try {
-				output = await commandSync(`sfdx hutte:pool:take --wait --json`);
-				vscode.window.showInformationMessage('Hutte: Successfully Set Org from Pool');
-				vscodeOutput.appendLine('Hutte: Successfully Set Org from Pool');
-			} catch(err: any) {
-				vscode.window.showErrorMessage(err.message);
-				vscodeOutput.appendLine(err.message);
-			}
-
+		vscode.commands.registerCommand('hutte.activateFromPool', async () => {
+			activateFromPool();
 		})
 	);
 
@@ -101,26 +91,46 @@ async function authorizeOrg(orgName?: string) {
 	const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
 	vscodeOutput.show();
 
-	let output;
-	try {
-		await vscode.window.withProgress({
-			location: vscode.ProgressLocation.Notification,
-			title: "Progress Notification",
-			cancellable: false,
-
-		}, (progress, token) => {
-			progress.report({ message: 'Setting Hutte Org' });
-
-			output = commandSync(`echo "${orgName}" | sfdx hutte:org:authorize --no-pull`, {shell: true});
+	await vscode.window.withProgress({
+		location: vscode.ProgressLocation.Notification,
+		title: "Progress Notification",
+		cancellable: false
+	}, (progress, token) => {
+		progress.report({ message: 'Setting Hutte Org' });
+		try {
+			commandSync(`echo "${orgName}" | sfdx hutte:org:authorize --no-pull`, {shell: true});
 			vscode.window.showInformationMessage('Hutte: Successfully Set Org');
+		} catch (err: any) {
+			vscode.window.showErrorMessage(err.message);
+			vscodeOutput.appendLine(err.message);
+		}
 
-			return Promise.resolve();
-		});
-		
-	} catch(err: any) {
-		vscode.window.showErrorMessage(err.message);
-		vscodeOutput.appendLine(err.message);
-	}
+		return Promise.resolve();
+	});
+	
+}
+
+async function activateFromPool() {
+	const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
+	vscodeOutput.show();
+
+	await vscode.window.withProgress({
+		location: vscode.ProgressLocation.Notification,
+		title: "Progress Notification",
+		cancellable: false
+	}, (progress, token) => {
+		progress.report({ message: 'Taking Hutte Org from Pool' });
+		try {
+			commandSync(`sfdx hutte:pool:take --wait --json`);
+			vscode.window.showInformationMessage('Hutte: Successfully Set Org from Pool');
+			vscodeOutput.appendLine('Hutte: Successfully Set Org from Pool');
+		} catch(err: any) {
+			vscode.window.showErrorMessage(err.message);
+			vscodeOutput.appendLine(err.message);
+		}
+
+		return Promise.resolve();
+	});
 }
 
 function updateStatusBarItem(): void {

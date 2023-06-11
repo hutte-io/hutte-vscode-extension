@@ -22,8 +22,8 @@
         "category": "Hutte"
       },
       {
-        "command": "hutte.getOrgFromPool",
-        "title": "Get Org From Pool",
+        "command": "hutte.activateFromPool",
+        "title": "Activate an Org From Pool",
         "category": "Hutte"
       },
       {
@@ -40,8 +40,8 @@
         }
       },
       {
-        "command": "hutteOrgs.takeFromPool",
-        "title": "Take From Pool"
+        "command": "hutteOrgs.activateFromPool",
+        "title": "Activate an Org From Pool"
       },
       {
         "command": "hutteOrgs.authorize",
@@ -89,7 +89,7 @@
           "group": "navigation"
         },
         {
-          "command": "hutteOrgs.takeFromPool",
+          "command": "hutteOrgs.activateFromPool",
           "when": "view == hutteOrgs"
         }
       ],
