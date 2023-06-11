@@ -32,6 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand('hutteOrgs.openOnHutte', hutteOrg => {
 		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${hutteOrg.globalId}`));
 	});
+	vscode.commands.registerCommand('hutte.signup', () => vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/sign-up`)));
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('hutte.login', async () => {
