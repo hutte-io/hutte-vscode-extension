@@ -18,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.window.createTreeView('hutteOrgs', {
 		treeDataProvider: hutteOrgsProvider
 	  });
-	vscode.commands.registerCommand('hutteOrgs.refreshEntry', () => vscode.window.showInformationMessage(`Successfully called refresh`));
+	vscode.commands.registerCommand('hutteOrgs.refreshEntry', () => hutteOrgsProvider.refresh());
 	// vscode.commands.registerCommand('extension.openPackageOnNpm', moduleName => vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://www.npmjs.com/package/${moduleName}`)));
 	vscode.commands.registerCommand('hutteOrgs.takeFromPool', () => vscode.window.showInformationMessage(`Successfully called take from pool.`));
 	vscode.commands.registerCommand('hutteOrgs.authorize', async (hutteOrg: HutteOrg) => await authorizeOrg(hutteOrg.label));

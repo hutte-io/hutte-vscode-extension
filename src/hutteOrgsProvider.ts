@@ -25,44 +25,31 @@ export class HutteOrgsProvider implements vscode.TreeDataProvider<HutteOrg> {
 			return Promise.resolve([]);
 		}
 
-		// @TODO: Wait until extensions are loaded to query the orgs
-
+		// @TODO: Wait until extensions are loaded to query the orgs - To be tested when extension is published
 		// @TODO: Handle scenario where the user is not logged into Hutte
 
-		// if (element) {
-		// 	return Promise.resolve(this.getDepsInPackageJson(path.join(this.workspaceRoot, 'node_modules', element.label, 'package.json')));
-		// } else {
-		// 	const packageJsonPath = path.join(this.workspaceRoot, 'package.json');
-		// 	if (this.pathExists(packageJsonPath)) {
-		// 		return Promise.resolve(this.getDepsInPackageJson(packageJsonPath));
-		// 	} else {
-		// 		vscode.window.showInformationMessage('Workspace has no package.json');
-		// 		return Promise.resolve([]);
-		// 	}
-		// }
-
-		const testlog = commandSync('pwd').stdout;
-		console.log(testlog);
-		const hutteOrgs: any = JSON.parse(commandSync(`sfdx hutte:org:list --json --includeauth`).stdout);
-
-		const orgs = hutteOrgs.result.map((hutteOrg: any) => new HutteOrg(hutteOrg.name, hutteOrg.createdBy, hutteOrg.state, hutteOrg.globalId, {
-			command: 'extension.openPackageOnNpm',
-			title: '',
-			arguments: [hutteOrg.name]
-		}));
-
+		const orgs = this.getOrgs();
 		return orgs;
 	}
 
-	private pathExists(p: string): boolean {
-		try {
-			fs.accessSync(p);
-		} catch (err) {
-			return false;
-		}
+	private getOrgs() {
+		let hutteOrgs: any;
+		let orgs;
+		
+			const testlog = commandSync('pwd').stdout;
+			console.log(testlog);
+			hutteOrgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --includeauth`).stdout);
+	
+			orgs = hutteOrgs.result.map((hutteOrg: any) => new HutteOrg(hutteOrg.name, hutteOrg.createdBy, hutteOrg.state, hutteOrg.globalId, {
+				command: 'extension.openPackageOnNpm',
+				title: '',
+				arguments: [hutteOrg.name]
+			}));
+		
 
-		return true;
+		return orgs;
 	}
+	
 }
 
 export class HutteOrg extends vscode.TreeItem {
