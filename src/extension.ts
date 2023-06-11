@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
 				
 				try {
 					const output = commandSync(`sfdx hutte:auth:login --email ${email} --password ${password}`);
-					if (output.stdout.includes('Hutte: Invalid Login Credentials')) {
+					if (output.stdout.includes('Invalid credentials')) {
 						progress.report({message: output.stdout});
 						vscodeOutput.appendLine(output.stdout);
 						vscode.commands.executeCommand('setContext', 'hutte.IsLogged', false);
