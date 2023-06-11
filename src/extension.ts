@@ -103,8 +103,6 @@ async function authorizeOrg(orgName?: string) {
 
 	let output;
 	try {
-		// @TODO: Fix no-pull issues
-		// @TODO: Fix you have unstaged changes git issue
 		await vscode.window.withProgress({
 			location: vscode.ProgressLocation.Notification,
 			title: "Progress Notification",
