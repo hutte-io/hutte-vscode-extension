@@ -98,16 +98,27 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 async function authorizeOrg(orgName?: string) {
-	// @TODO: Change to progress messgae
-	vscode.window.showInformationMessage('Authorising Hutte Org...');
 	const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
 	vscodeOutput.show();
 
 	let output;
 	try {
-		output = commandSync(`echo "${orgName}" | sfdx hutte:org:authorize`, {shell: true});
-		vscode.window.showInformationMessage('Hutte: Successfully Set Org');
-		vscodeOutput.appendLine('Hutte: Successfully Set Org');
+		// @TODO: Fix no-pull issues
+		// @TODO: Fix you have unstaged changes git issue
+		await vscode.window.withProgress({
+			location: vscode.ProgressLocation.Notification,
+			title: "Progress Notification",
+			cancellable: false,
+
+		}, (progress, token) => {
+			progress.report({ message: 'Setting Hutte Org' });
+
+			output = commandSync(`echo "${orgName}" | sfdx hutte:org:authorize --no-pull`, {shell: true});
+			vscode.window.showInformationMessage('Hutte: Successfully Set Org');
+
+			return Promise.resolve();
+		});
+		
 	} catch(err: any) {
 		vscode.window.showErrorMessage(err.message);
 		vscodeOutput.appendLine(err.message);
