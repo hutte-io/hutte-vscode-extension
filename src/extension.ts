@@ -5,8 +5,6 @@ import * as vscode from 'vscode';
 import { HutteOrgsProvider, HutteOrg } from './hutteOrgsProvider';
 import { commandSync,  } from "execa";
 
-let myStatusBarItem: vscode.StatusBarItem;
-
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
