@@ -27,11 +27,6 @@
         "category": "Hutte"
       },
       {
-        "command": "hutte.getOrg",
-        "title": "Get Org",
-        "category": "Hutte"
-      },
-      {
         "command": "hutteOrgs.refreshEntry",
         "title": "Refresh",
         "icon": {
