@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import * as path from 'path';
 import { commandSync } from "execa";
 
@@ -26,28 +25,18 @@ export class HutteOrgsProvider implements vscode.TreeDataProvider<HutteOrg> {
 		}
 
 		// @TODO: Wait until extensions are loaded to query the orgs - To be tested when extension is published
-		// @TODO: Handle scenario where the user is not logged into Hutte
 
-		const orgs = this.getOrgs();
-		return orgs;
+		return this.getOrgs();
 	}
 
 	private getOrgs() {
-		let hutteOrgs: any;
-		let orgs;
-		
-			const testlog = commandSync('pwd').stdout;
-			console.log(testlog);
-			hutteOrgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --includeauth`).stdout);
-	
-			orgs = hutteOrgs.result.map((hutteOrg: any) => new HutteOrg(hutteOrg.name, hutteOrg.createdBy, hutteOrg.state, hutteOrg.globalId, {
-				command: 'extension.openPackageOnNpm',
-				title: '',
-				arguments: [hutteOrg.name]
-			}));
-		
+		const hutteOrgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --includeauth`).stdout);
 
-		return orgs;
+		return hutteOrgs.result.map((hutteOrg: any) => new HutteOrg(hutteOrg.name, hutteOrg.createdBy, hutteOrg.state, hutteOrg.globalId, {
+			command: 'extension.openPackageOnNpm',
+			title: '',
+			arguments: [hutteOrg.name]
+		}));
 	}
 	
 }
