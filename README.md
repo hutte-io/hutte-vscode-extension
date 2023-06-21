@@ -1,71 +1,34 @@
-# hutte README
+# VSCode Hutte Extension
 
-This is the README for your extension "hutte". After writing up a brief description, we recommend including the following sections.
+Allows you to use Hutte capabilities from your VSCode application, without having to navigate to Hutte UI. Development can be done from the beginning (creating of scratch orgs) to the end all from VSCode.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Signup into Hutte
+- Login into Hutte
+- Retrieve Active Orgs from the Hutte project linked to the repository
+ ![](./resources/documentation/gifs/HutteLogin.gif)
 
-For example if there is an image subfolder under your extension project workspace:
+- Set as Default an Org from the Hutte project list.
+  ![](./resources/documentation/gifs/HutteSetDefaultOrg.gif)
+  Note that the default behaviour of `Hutte.yml` will be taken into account. This set default hutte org logic will perform the same logic as Hutte SFDX Plugin's `sfdx hutte:org:authorize` command.
 
-\!\[feature X\]\(images/feature-x.png\)
+- Activate a new Org from the Pool
+  ![](./resources/documentation/gifs/TakingOrgFromPool.gif)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- Open an Org on the Hutte UI (deeplink)
+  ![](./resources/documentation/gifs/OpenInHutte.gif) 
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- [SFDX CLI](https://developer.salesforce.com/tools/sfdxcli)
+- [Hutte CLI](https://github.com/hutte-io/cli), check [this article](https://docs.hutte.io/en/articles/6836945-hutte-sfdx-plugin) for more information
+- [Hutte account](https://hutte.io/trails/signup/)
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+First version of the extension
 
 **Enjoy!**
