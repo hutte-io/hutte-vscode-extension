@@ -2,7 +2,12 @@
   "name": "hutte",
   "displayName": "Hutte",
   "description": "This extension enables to interact with Hutte from VSCode",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "publisher": "Hutte",
+  "repository": {
+    "url": "https://github.com/hutte-io/hutte-vscode-extension"
+  },
+  "icon": "resources/icon/hutte.png",
   "engines": {
     "vscode": "^1.78.0"
   },
