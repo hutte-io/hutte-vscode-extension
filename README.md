@@ -2,6 +2,15 @@
 
 Allows you to use Hutte capabilities from your VSCode application, without having to navigate to Hutte UI. Development can be done from the beginning (creating of scratch orgs) to the end all from VSCode.
 
+## Pre-requisites
+
+- [SFDX CLI](https://developer.salesforce.com/tools/sfdxcli)
+- [Hutte CLI](https://github.com/hutte-io/cli), check [this article](https://docs.hutte.io/en/articles/6836945-hutte-sfdx-plugin) for more information. Make sure the version of Hutte plugin is equal or bigger than `1.1.0`.
+  - Upgrading Hutte CLI:
+    - To check the current version of Hutte plugin, use `sfdx plugins:inspect hutte`
+    - To upgrade to 1.1.0, use `sfdx plugins:install hutte@1.1.0`
+- [Hutte account](https://hutte.io/trails/signup/)
+
 ## Features
 
 - Signup into Hutte
@@ -18,12 +27,6 @@ Allows you to use Hutte capabilities from your VSCode application, without havin
 
 - Open an Org on the Hutte UI (deeplink)
   ![](./resources/documentation/gifs/OpenInHutte.gif) 
-
-## Requirements
-
-- [SFDX CLI](https://developer.salesforce.com/tools/sfdxcli)
-- [Hutte CLI](https://github.com/hutte-io/cli), check [this article](https://docs.hutte.io/en/articles/6836945-hutte-sfdx-plugin) for more information
-- [Hutte account](https://hutte.io/trails/signup/)
 
 ## Release Notes
 

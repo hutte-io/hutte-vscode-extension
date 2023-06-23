@@ -44,7 +44,7 @@ function registerSidePanelCommands() {
 
 function configureLoginIfRequired() {
 	try {
-		commandSync(`sfdx hutte:org:list --json --includeauth`);
+		commandSync(`sfdx hutte:org:list --json --verbose`);
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
 	} catch(err){
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', false);
