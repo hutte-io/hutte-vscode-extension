@@ -52,9 +52,6 @@ function initVsCodeContextVars() {
 }
 
 function isSfdxProjectOpened() {
-	const tt = commandSync(`pwd`);
-	console.log(tt.stdout);
-
 	const SFDX_PROJECT_FILE = 'sfdx-project.json';
 	const sfdxProjectActive: Boolean = fs.existsSync(path.join(getRootWorkspacePath(), SFDX_PROJECT_FILE));
 
@@ -68,11 +65,8 @@ function isSfdxProjectOpened() {
 }
 
 function isLoggedInHutte() {
-	const tt = commandSync(`pwd`);
-	console.log(tt.stdout);
-
 	try {
-		commandSync(`sfdx hutte:org:list --json --verbose`);
+		commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: process.cwd() });
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
 	} catch(err){
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', false);

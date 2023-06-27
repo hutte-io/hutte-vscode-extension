@@ -16,7 +16,7 @@ export async function loginHutte() {
         progress.report({ message: 'Setting Hutte Org' });
         
         try {
-            const output = commandSync(`sfdx hutte:auth:login --email ${email} --password ${password}`);
+            const output = commandSync(`sfdx hutte:auth:login --email ${email} --password ${password}`, { cwd: process.cwd() });
             if (output.stdout.includes('Invalid credentials')) {
                 progress.report({message: output.stdout});
                 vscodeOutput.appendLine(output.stdout);
@@ -49,7 +49,7 @@ export async function activateFromPool() {
 	}, (progress, _) => {
 		progress.report({ message: 'Taking Hutte Org from Pool' });
 		try {
-			commandSync(`sfdx hutte:pool:take --wait --json`);
+			commandSync(`sfdx hutte:pool:take --wait --json`, { cwd: process.cwd() });
 			vscode.window.showInformationMessage('Hutte: Successfully Activated Org from Pool');
 			vscodeOutput.appendLine('Hutte: Successfully Activated Org from Pool');
 		} catch(err: any) {
@@ -72,7 +72,7 @@ export async function authorizeOrg(orgName?: string) {
 	}, (progress, _) => {
 		progress.report({ message: 'Setting Hutte Org' });
 		try {
-			commandSync(`echo "${orgName}" | sfdx hutte:org:authorize --no-pull`, {shell: true});
+			commandSync(`echo "${orgName}" | sfdx hutte:org:authorize --no-pull`, {shell: true, cwd: process.cwd() });
 			vscode.window.showInformationMessage('Hutte: Successfully Set Org');
 		} catch (err: any) {
 			vscode.window.showErrorMessage(err.message);

@@ -30,7 +30,7 @@ export class HutteOrgsProvider implements vscode.TreeDataProvider<HutteOrg> {
 	}
 
 	private getOrgs() {
-		const hutteOrgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --verbose`).stdout);
+		const hutteOrgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: process.cwd() }).stdout);
 
 		return hutteOrgs.result.map((hutteOrg: any) => new HutteOrg(hutteOrg.name, hutteOrg.createdBy, hutteOrg.state, hutteOrg.globalId));
 	}
