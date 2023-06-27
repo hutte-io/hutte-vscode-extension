@@ -1,12 +1,17 @@
 // The module 'vscode' contains the VS Code extensibility API
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
+import { workspace, WorkspaceFolder } from 'vscode';
 import { HutteOrgsProvider, HutteOrg } from './hutteOrgsProvider';
 import { commandSync  } from "execa";
 import { loginHutte, activateFromPool, authorizeOrg } from './commands';
 
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
-	configureLoginIfRequired();
+	initVsCodeContextVars();
+	isSfdxProjectOpened();
+	isLoggedInHutte();
 	registerSidePanelCommands();
 	setPaletteCommands(context);
 }
@@ -42,11 +47,48 @@ function registerSidePanelCommands() {
 	});
 }
 
-function configureLoginIfRequired() {
+function initVsCodeContextVars() {
+	vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
+}
+
+function isSfdxProjectOpened() {
+	const tt = commandSync(`pwd`);
+	console.log(tt.stdout);
+
+	const SFDX_PROJECT_FILE = 'sfdx-project.json';
+	const sfdxProjectActive: Boolean = fs.existsSync(path.join(getRootWorkspacePath(), SFDX_PROJECT_FILE));
+
+	if (!sfdxProjectActive) {
+		vscode.commands.executeCommand('setContext', 'hutte.sfdxProjectOpened', false);
+	} else {
+		vscode.commands.executeCommand('setContext', 'hutte.sfdxProjectOpened', true);
+	}
+
+	return sfdxProjectActive;
+}
+
+function isLoggedInHutte() {
+	const tt = commandSync(`pwd`);
+	console.log(tt.stdout);
+
 	try {
 		commandSync(`sfdx hutte:org:list --json --verbose`);
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
 	} catch(err){
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', false);
 	}
+}
+
+function getRootWorkspacePath(): string {
+	return getRootWorkspace().uri ? getRootWorkspace().uri.fsPath : '';
+}
+
+function getRootWorkspace(): WorkspaceFolder {
+	return hasRootWorkspace()
+		? workspace.workspaceFolders![0]
+		: ({} as WorkspaceFolder);
+}
+
+function hasRootWorkspace(ws: typeof workspace = workspace) {
+	return ws && ws.workspaceFolders && ws.workspaceFolders.length > 0;
 }

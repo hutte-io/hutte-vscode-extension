@@ -2,7 +2,7 @@
   "name": "hutte",
   "displayName": "Hutte",
   "description": "This extension enables to interact with Hutte from VSCode",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "Hutte",
   "repository": {
     "url": "https://github.com/hutte-io/hutte-vscode-extension"
@@ -72,16 +72,15 @@
           "name": "Project view",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Hutte",
-		  "when": "hutte.IsLogged"
+		      "when": "hutte.IsLogged && hutte.sfdxProjectOpened"
         },
-		{
-			"id": "hutteOrgsAuth",
-			"name": "Authorization Required",
-			"icon": "media/Hutte_Logo_Flat.svg",
-			"contextualTitle": "Authorization Required",
-			"when": "!hutte.IsLogged",
-			"contents": "ASDASD"
-		}
+        {
+          "id": "hutteOrgsAuth",
+          "name": "Authorization Required",
+          "icon": "media/Hutte_Logo_Flat.svg",
+          "contextualTitle": "Authorization Required",
+          "when": "!hutte.IsLogged && hutte.sfdxProjectOpened"
+        }
       ]
     },
     "viewsWelcome": [
