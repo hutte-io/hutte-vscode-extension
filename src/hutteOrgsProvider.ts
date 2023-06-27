@@ -24,13 +24,11 @@ export class HutteOrgsProvider implements vscode.TreeDataProvider<HutteOrg> {
 			return Promise.resolve([]);
 		}
 
-		// @TODO: Wait until extensions are loaded to query the orgs - To be tested when extension is published
-
 		return this.getOrgs();
 	}
 
 	private getOrgs() {
-		const hutteOrgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: process.cwd() }).stdout);
+		const hutteOrgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: this.workspaceRoot }).stdout);
 
 		return hutteOrgs.result.map((hutteOrg: any) => new HutteOrg(hutteOrg.name, hutteOrg.createdBy, hutteOrg.state, hutteOrg.globalId));
 	}
