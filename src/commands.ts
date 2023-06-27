@@ -39,7 +39,7 @@ export async function loginHutte() {
     });
 }
 
-export async function activateFromPool() {
+export async function takeFromPool() {
 	const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
 	vscodeOutput.show();
 

@@ -5,7 +5,7 @@ import * as path from 'path';
 import { workspace, WorkspaceFolder } from 'vscode';
 import { HutteOrgsProvider, HutteOrg } from './hutteOrgsProvider';
 import { commandSync  } from "execa";
-import { loginHutte, activateFromPool, authorizeOrg } from './commands';
+import { loginHutte, takeFromPool, authorizeOrg } from './commands';
 import { getRootPath } from './utils';
 
 // This method is called when your extension is activated
@@ -25,7 +25,7 @@ function setPaletteCommands(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('hutte.login', async () => await loginHutte())
 	);
 	context.subscriptions.push(
-		vscode.commands.registerCommand('hutte.activateFromPool', async () => await activateFromPool())
+		vscode.commands.registerCommand('hutte.takeFromPool', async () => await takeFromPool())
 	);
 }
 
@@ -37,8 +37,8 @@ function registerSidePanelCommands() {
 
 	vscode.commands.registerCommand('hutte.signup', () => vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/sign-up`)));
 	vscode.commands.registerCommand('hutteOrgs.refreshEntry', () => hutteOrgsProvider.refresh());
-	vscode.commands.registerCommand('hutteOrgs.activateFromPool', async () => {
-		await activateFromPool();
+	vscode.commands.registerCommand('hutteOrgs.takeFromPool', async () => {
+		await takeFromPool();
 		hutteOrgsProvider.refresh();
 	});
 	vscode.commands.registerCommand('hutteOrgs.authorize', async (hutteOrg: HutteOrg) => await authorizeOrg(hutteOrg.label));

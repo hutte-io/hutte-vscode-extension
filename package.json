@@ -2,7 +2,7 @@
   "name": "hutte",
   "displayName": "Hutte",
   "description": "This extension enables to interact with Hutte from VSCode",
-  "version": "0.0.8",
+  "version": "0.0.11",
   "publisher": "Hutte",
   "repository": {
     "url": "https://github.com/hutte-io/hutte-vscode-extension"
@@ -27,8 +27,8 @@
         "category": "Hutte"
       },
       {
-        "command": "hutte.activateFromPool",
-        "title": "Activate an Org From Pool",
+        "command": "hutte.takeFromPool",
+        "title": "Take from Pool",
         "category": "Hutte"
       },
       {
@@ -40,8 +40,8 @@
         }
       },
       {
-        "command": "hutteOrgs.activateFromPool",
-        "title": "Activate an Org From Pool"
+        "command": "hutteOrgs.takeFromPool",
+        "title": "Take from Pool"
       },
       {
         "command": "hutteOrgs.authorize",
@@ -101,7 +101,7 @@
           "group": "navigation"
         },
         {
-          "command": "hutteOrgs.activateFromPool",
+          "command": "hutteOrgs.takeFromPool",
           "when": "view == hutteOrgs"
         }
       ],
