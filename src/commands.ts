@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { commandSync  } from "execa";
 import { getRootPath } from './utils';
+import { execSync } from 'child_process';
 
 export async function loginHutte() {
     const email = await vscode.window.showInputBox({title: 'Hutte Email Address'});
@@ -73,7 +74,10 @@ export async function authorizeOrg(orgName?: string) {
 	}, (progress, _) => {
 		progress.report({ message: 'Setting Hutte Org' });
 		try {
-			commandSync(`echo "${orgName}" | sfdx hutte:org:authorize --no-pull`, {shell: true, cwd: getRootPath() });
+			// const output = commandSync(String.raw`echo -n "${orgName}" | sfdx hutte:org:authorize --no-pull`, { shell:true,  cwd: getRootPath() });
+
+			// TODO: Add orgName as a parameter to sfdx hutte:org:authorize in Hutte CLI and refactor this to not use a Unix Shell and therefore make it compatible with more devices.
+			const output = execSync(String.raw`echo -n "${orgName}" | sfdx hutte:org:authorize --no-pull`, { cwd: getRootPath(), shell: "/bin/bash" }).toString();
 			vscode.window.showInformationMessage('Hutte: Successfully Set Org');
 		} catch (err: any) {
 			vscode.window.showErrorMessage(err.message);
