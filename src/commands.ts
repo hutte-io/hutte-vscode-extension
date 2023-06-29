@@ -4,8 +4,8 @@ import { getRootPath } from './utils';
 import { execSync } from 'child_process';
 
 export async function loginHutte() {
-    const email = await vscode.window.showInputBox({title: 'Hutte Email Address'});
-    const password = await vscode.window.showInputBox({title: 'Hutte Password', password: true});
+    const email = await vscode.window.showInputBox({title: 'Hutte Email Address', ignoreFocusOut: true});
+    const password = await vscode.window.showInputBox({title: 'Hutte Password', password: true, ignoreFocusOut: true });
 
     const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
     vscodeOutput.show();
