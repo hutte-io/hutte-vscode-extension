@@ -69,7 +69,7 @@
       "package-explorer": [
         {
           "id": "hutteOrgs",
-          "name": "Project view",
+          "name": "Project",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Hutte",
 		      "when": "hutte.IsLogged && hutte.sfdxProjectOpened"
