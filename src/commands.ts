@@ -7,56 +7,39 @@ export async function loginHutte() {
     const email = await vscode.window.showInputBox({title: 'Hutte Email Address', ignoreFocusOut: true});
     const password = await vscode.window.showInputBox({title: 'Hutte Password', password: true, ignoreFocusOut: true });
 
-    const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
-    vscodeOutput.show();
-
     await vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
-        title: "Authenticating into Hutte",
+        title: "Hutte: Logging",
         cancellable: false
-    }, (progress, _) => {
-        progress.report({ message: 'Setting Hutte Org' });
-        
+    }, () => {        
         try {
             const output = commandSync(`sfdx hutte:auth:login --email ${email} --password ${password}`, { cwd: getRootPath() });
             if (output.stdout.includes('Invalid credentials')) {
-                progress.report({message: output.stdout});
-                vscodeOutput.appendLine(output.stdout);
-                vscode.commands.executeCommand('setContext', 'hutte.IsLogged', false);
-
-                return Promise.reject();
+                throw new Error(output.stdout);
             } else {
-                progress.report({message: 'Hutte: Successfully Authorized'});
-                vscodeOutput.appendLine('Hutte: Successfully Authorized');
                 vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
-
-                return Promise.resolve();
+				vscode.window.showInformationMessage('Hutte: Successfully logged in');
             }
         } catch (err: any) {
-            vscode.window.showErrorMessage(err.message);
-            vscodeOutput.appendLine(err.message);
-            return Promise.reject();
+            vscode.window.showErrorMessage('Hutte Error: ' + err.message);
+			vscode.commands.executeCommand('setContext', 'hutte.IsLogged', false);
         };
+
+		return Promise.resolve();
     });
 }
 
 export async function takeFromPool() {
-	const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
-	vscodeOutput.show();
-
 	await vscode.window.withProgress({
 		location: vscode.ProgressLocation.Notification,
-		title: "Activating Org From Pool",
-		cancellable: false
-	}, (progress, _) => {
-		progress.report({ message: 'Taking Hutte Org from Pool' });
+		title: "Hutte: Taking Org from Pool",
+		cancellable: false,
+	}, () => {
 		try {
 			commandSync(`sfdx hutte:pool:take --wait --json`, { cwd: getRootPath() });
-			vscode.window.showInformationMessage('Hutte: Successfully Activated Org from Pool');
-			vscodeOutput.appendLine('Hutte: Successfully Activated Org from Pool');
+			vscode.window.showInformationMessage('Hutte: Successfully Taken Org from Pool');
 		} catch(err: any) {
-			vscode.window.showErrorMessage(err.message);
-			vscodeOutput.appendLine(err.message);
+			vscode.window.showErrorMessage('Hutte Error: ' + err.message);
 		}
 
 		return Promise.resolve();
@@ -64,24 +47,18 @@ export async function takeFromPool() {
 }
 
 export async function authorizeOrg(orgName?: string) {
-	const vscodeOutput : vscode.OutputChannel = vscode.window.createOutputChannel('Hutte');
-	vscodeOutput.show();
-
 	await vscode.window.withProgress({
 		location: vscode.ProgressLocation.Notification,
-		title: "Authorizing Hutte Org",
+		title: "Hutte: Setting Org as Default & Switching to the Org's Git Branch",
 		cancellable: false
-	}, (progress, _) => {
-		progress.report({ message: 'Setting Hutte Org' });
+	}, () => {
 		try {
 			// const output = commandSync(String.raw`echo -n "${orgName}" | sfdx hutte:org:authorize --no-pull`, { shell:true,  cwd: getRootPath() });
-
 			// TODO: Add orgName as a parameter to sfdx hutte:org:authorize in Hutte CLI and refactor this to not use a Unix Shell and therefore make it compatible with more devices.
 			const output = execSync(String.raw`echo -n "${orgName}" | sfdx hutte:org:authorize --no-pull`, { cwd: getRootPath(), shell: "/bin/bash" }).toString();
 			vscode.window.showInformationMessage('Hutte: Successfully Set Org');
 		} catch (err: any) {
-			vscode.window.showErrorMessage(err.message);
-			vscodeOutput.appendLine(err.message);
+			vscode.window.showErrorMessage('Hutte Error: ' + err.message);
 		}
 
 		return Promise.resolve();
