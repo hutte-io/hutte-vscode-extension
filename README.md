@@ -34,4 +34,8 @@ Allows you to use Hutte capabilities from your VSCode application, without havin
 
 First version of the extension
 
+## Feedback and Bug Reports
+
+Your support and feedback are instrumental in shaping the future of this Plugin. Please reach out to support@hutte.io, or reach us through the chat on hutte.io or inside app2.hutte.io if you encounter issues or have suggestions for improvement.
+
 **Enjoy!**
