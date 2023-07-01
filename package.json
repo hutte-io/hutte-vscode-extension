@@ -44,16 +44,16 @@
         "title": "Take from Pool"
       },
       {
+        "command": "hutteOrgs.openOnHutte",
+        "title": "Open on Hutte"
+      },
+      {
         "command": "hutteOrgs.authorize",
-        "title": "Authorize",
+        "title": "Authorize & Set as Default",
         "icon": {
           "light": "resources/light/login.svg",
           "dark": "resources/dark/login.svg"
         }
-      },
-      {
-        "command": "hutteOrgs.openOnHutte",
-        "title": "Open on Hutte"
       }
     ],
     "viewsContainers": {
@@ -110,6 +110,10 @@
           "command": "hutteOrgs.authorize",
           "when": "view == hutteOrgs",
           "group": "inline"
+        },
+        {
+          "command": "hutteOrgs.authorize",
+          "when": "view == hutteOrgs"
         },
         {
           "command": "hutteOrgs.openOnHutte",
