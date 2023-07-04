@@ -30,13 +30,19 @@ export async function loginHutte() {
 }
 
 export async function takeFromPool() {
+	const poolName = await vscode.window.showInputBox({title: 'Set Org Name (If empty, the default name will be set)', ignoreFocusOut: true });
+	const takeFromPoolCommand = poolName ? 
+		`sfdx hutte:pool:take --name ${poolName} --wait --json`
+		:
+		`sfdx hutte:pool:take --wait --json`;
+
 	await vscode.window.withProgress({
 		location: vscode.ProgressLocation.Notification,
 		title: "Hutte: Taking Org from Pool",
 		cancellable: false,
 	}, () => {
 		try {
-			commandSync(`sfdx hutte:pool:take --wait --json`, { cwd: getRootPath() });
+			commandSync(takeFromPoolCommand, { cwd: getRootPath() });
 			vscode.window.showInformationMessage('Hutte: Successfully Taken Org from Pool');
 		} catch(err: any) {
 			vscode.window.showErrorMessage('Hutte Error: ' + err.message);
