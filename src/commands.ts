@@ -62,7 +62,7 @@ export async function authorizeOrg(orgName?: string) {
 			// const output = commandSync(String.raw`echo -n "${orgName}" | sfdx hutte:org:authorize --no-pull`, { shell:true,  cwd: getRootPath() });
 			// TODO: Add orgName as a parameter to sfdx hutte:org:authorize in Hutte CLI and refactor this to not use a Unix Shell and therefore make it compatible with more devices.
 			const output = execSync(String.raw`echo -n "${orgName}" | sfdx hutte:org:authorize --no-pull`, { cwd: getRootPath(), shell: "/bin/bash" }).toString();
-			vscode.window.showInformationMessage('Hutte: Successfully Set Org');
+			vscode.window.showInformationMessage('Hutte: Successfully Set Org as Default');
 		} catch (err: any) {
 			vscode.window.showErrorMessage('Hutte Error: ' + err.message);
 		}
