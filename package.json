@@ -27,6 +27,14 @@
         "category": "Hutte"
       },
       {
+        "command": "hutte.refreshEmptyProject",
+        "title": "Refresh Empty Project",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
         "command": "hutte.takeFromPool",
         "title": "Take from Pool",
         "category": "Hutte"
@@ -72,7 +80,7 @@
           "name": "Project",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Hutte",
-		      "when": "hutte.IsLogged && hutte.sfdxProjectOpened"
+		      "when": "hutte.IsLogged && hutte.sfdxProjectOpened && hutte.orgsFound"
         },
         {
           "id": "hutteOrgsAuth",
@@ -80,6 +88,13 @@
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Authorization Required",
           "when": "!hutte.IsLogged && hutte.sfdxProjectOpened"
+        },
+        {
+          "id": "hutteNoOrgsFound",
+          "name": "No Hutte Orgs Found",
+          "icon": "media/Hutte_Logo_Flat.svg",
+          "contextualTitle": "No Hutte Orgs Found",
+          "when": "hutte.IsLogged && !hutte.orgsFound"
         }
       ]
     },
@@ -88,13 +103,22 @@
         "view": "hutteOrgs",
         "contents": "Loading Hutte Orgs..."
       },
-	  {
-		"view": "hutteOrgsAuth",
-		"contents": "In order to use Hutte extension, you must first login into Hutte using your Hutte account, or create a new Hutte account.\n[Hutte Login](command:hutte.login)\n[Hutte SignUp](command:hutte.signup)"
-	  }
+      {
+        "view": "hutteOrgsAuth",
+        "contents": "In order to use Hutte extension, you must first login into Hutte using your Hutte account, or create a new Hutte account.\n[Hutte Login](command:hutte.login)\n[Hutte SignUp](command:hutte.signup)"
+      },
+      {
+        "view": "hutteNoOrgsFound",
+        "contents": "No Hutte Orgs were found for this repository. There are two possible reasons:\n1. This repository is not connected to a project in your Hutte account.\n2. Your Hutte project does not contain any active orgs."
+      }
     ],
     "menus": {
       "view/title": [
+        {
+          "command": "hutte.refreshEmptyProject",
+          "when": "view == hutteNoOrgsFound",
+          "group": "navigation"
+        },
         {
           "command": "hutteOrgs.refreshEntry",
           "when": "view == hutteOrgs",

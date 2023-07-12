@@ -2,8 +2,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { workspace, WorkspaceFolder } from 'vscode';
-import { HutteOrgsProvider, HutteOrg } from './hutteOrgsProvider';
+import { HutteOrgsProvider } from './hutteOrgsProvider';
+import { HutteOrg, getOrgs } from './hutteOrg';
 import { commandSync  } from "execa";
 import { loginHutte, takeFromPool, authorizeOrg } from './commands';
 import { getRootPath } from './utils';
@@ -23,6 +23,9 @@ export function deactivate() {}
 function setPaletteCommands(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('hutte.login', async () => await loginHutte())
+	);
+	context.subscriptions.push(
+		vscode.commands.registerCommand('hutte.refreshEmptyProject', async () => await getOrgs())
 	);
 	context.subscriptions.push(
 		vscode.commands.registerCommand('hutte.takeFromPool', async () => await takeFromPool())
@@ -49,6 +52,7 @@ function registerSidePanelCommands() {
 
 function initVsCodeContextVars() {
 	vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
+	vscode.commands.executeCommand('setContext', 'hutte.orgsFound', true);
 }
 
 function isSfdxProjectOpened() {
