@@ -30,10 +30,10 @@ export class HutteOrg extends vscode.TreeItem {
 export function getOrgs() {
     const hutteOrgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: getRootPath() }).stdout);
 
-    if (hutteOrgs.result.length) {
-        vscode.commands.executeCommand('setContext', 'hutte.orgsFound', true);
-    } else {
+    if (!hutteOrgs || !hutteOrgs.result || !hutteOrgs.result.length) {
         vscode.commands.executeCommand('setContext', 'hutte.orgsFound', false);
+    } else {
+        vscode.commands.executeCommand('setContext', 'hutte.orgsFound', true);
     }
 
     return hutteOrgs.result.map(
