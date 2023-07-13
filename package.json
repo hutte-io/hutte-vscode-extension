@@ -80,21 +80,21 @@
           "name": "Project",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Hutte",
-		      "when": "hutte.IsLogged && hutte.sfdxProjectOpened && hutte.orgsFound"
+		      "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && hutte.orgsFound"
         },
         {
           "id": "hutteOrgsAuth",
           "name": "Authorization Required",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Authorization Required",
-          "when": "!hutte.IsLogged && hutte.sfdxProjectOpened"
+          "when": "!hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened"
         },
         {
           "id": "hutteNoOrgsFound",
           "name": "No Hutte Orgs Found",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "No Hutte Orgs Found",
-          "when": "hutte.IsLogged && !hutte.orgsFound"
+          "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && !hutte.orgsFound"
         }
       ]
     },

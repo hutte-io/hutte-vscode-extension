@@ -11,6 +11,7 @@ import { getRootPath } from './utils';
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
 	initVsCodeContextVars();
+	isGitProjectOpened();
 	isSfdxProjectOpened();
 	isLoggedInHutte();
 	registerSidePanelCommands();
@@ -56,16 +57,19 @@ function initVsCodeContextVars() {
 }
 
 function isSfdxProjectOpened() {
-	const SFDX_PROJECT_FILE = 'sfdx-project.json';
-	const sfdxProjectActive: Boolean = fs.existsSync(path.join(getRootPath()!, SFDX_PROJECT_FILE));
-
-	if (!sfdxProjectActive) {
-		vscode.commands.executeCommand('setContext', 'hutte.sfdxProjectOpened', false);
-	} else {
+	if (fs.existsSync(path.join(getRootPath()!, 'sfdx-project.json'))) {
 		vscode.commands.executeCommand('setContext', 'hutte.sfdxProjectOpened', true);
+	} else {
+		vscode.commands.executeCommand('setContext', 'hutte.sfdxProjectOpened', false);
 	}
+}
 
-	return sfdxProjectActive;
+function isGitProjectOpened() {
+	if (fs.existsSync(path.join(getRootPath()!, '.git'))) {
+		vscode.commands.executeCommand('setContext', 'hutte.gitProjectOpened', true);
+	} else {
+		vscode.commands.executeCommand('setContext', 'hutte.gitProjectOpened', false);
+	}
 }
 
 function isLoggedInHutte() {
