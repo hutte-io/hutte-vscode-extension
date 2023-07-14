@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 import { commandSync  } from "execa";
-import { getRootPath } from './utils';
+import { getRootPath, getUserInfo } from './utils';
 import { execSync } from 'child_process';
+import { updateStatusBar } from './statusBar';
 
-export async function loginHutte() {
+export async function loginHutte(context: vscode.ExtensionContext) {
     const email = await vscode.window.showInputBox({title: 'Hutte Email Address', ignoreFocusOut: true});
     const password = await vscode.window.showInputBox({title: 'Hutte Password', password: true, ignoreFocusOut: true });
 
@@ -11,7 +12,7 @@ export async function loginHutte() {
         location: vscode.ProgressLocation.Notification,
         title: "Hutte: Logging",
         cancellable: false
-    }, () => {        
+    }, async () => {        
         try {
             const output = commandSync(`sfdx hutte:auth:login --email ${email} --password ${password}`, { cwd: getRootPath() });
             if (output.stdout.includes('Invalid credentials')) {
@@ -19,10 +20,10 @@ export async function loginHutte() {
             } else {
                 vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
 				vscode.window.showInformationMessage('Hutte: Successfully logged in');
+				updateStatusBar(await getUserInfo());
             }
         } catch (err: any) {
             vscode.window.showErrorMessage('Hutte Error: ' + err.message);
-			vscode.commands.executeCommand('setContext', 'hutte.IsLogged', false);
         };
 
 		return Promise.resolve();

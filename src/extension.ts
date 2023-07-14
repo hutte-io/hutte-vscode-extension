@@ -6,24 +6,26 @@ import { HutteOrgsProvider } from './hutteOrgsProvider';
 import { HutteOrg, getOrgs } from './hutteOrg';
 import { commandSync  } from "execa";
 import { loginHutte, takeFromPool, authorizeOrg } from './commands';
-import { getRootPath } from './utils';
+import { getRootPath, getUserInfo } from './utils';
+import { registerStatusBar, updateStatusBar } from './statusBar';
 
 // This method is called when your extension is activated
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 	initVsCodeContextVars();
 	isGitProjectOpened();
 	isSfdxProjectOpened();
-	isLoggedInHutte();
 	registerSidePanelCommands();
+	registerStatusBar(context);
+	await isLoggedInHutte();
 	setPaletteCommands(context);
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
 
-function setPaletteCommands(context: vscode.ExtensionContext) {
+async function setPaletteCommands(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
-		vscode.commands.registerCommand('hutte.login', async () => await loginHutte())
+		vscode.commands.registerCommand('hutte.login', async () => await loginHutte(context))
 	);
 	context.subscriptions.push(
 		vscode.commands.registerCommand('hutte.refreshEmptyProject', async () => await getOrgs())
@@ -72,11 +74,13 @@ function isGitProjectOpened() {
 	}
 }
 
-function isLoggedInHutte() {
+async function isLoggedInHutte() {
 	try {
 		commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: getRootPath() });
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
+		updateStatusBar(await getUserInfo());
 	} catch(err){
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', false);
+		updateStatusBar();
 	}
 }
