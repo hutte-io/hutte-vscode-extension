@@ -14,9 +14,10 @@ export async function activate(context: vscode.ExtensionContext) {
 	initVsCodeContextVars();
 	isGitProjectOpened();
 	isSfdxProjectOpened();
+	const isLoggedIn: Boolean = await isLoggedInHutte();
 	registerSidePanelCommands();
 	registerStatusBar(context);
-	await isLoggedInHutte();
+	setStatusBar(isLoggedIn);
 	setPaletteCommands(context);
 }
 
@@ -74,13 +75,21 @@ function isGitProjectOpened() {
 	}
 }
 
-async function isLoggedInHutte() {
+async function isLoggedInHutte(): Promise<Boolean> {
 	try {
 		commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: getRootPath() });
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
-		updateStatusBar(await getUserInfo());
+		return true;
 	} catch(err){
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', false);
-		updateStatusBar();
+		return false;
 	}
+}
+
+async function setStatusBar(isLoggedIn: Boolean) {
+	if (isLoggedIn) {
+		updateStatusBar(await getUserInfo());
+	} else {
+		updateStatusBar();
+	};
 }
