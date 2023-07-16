@@ -40,7 +40,7 @@
         "category": "Hutte"
       },
       {
-        "command": "hutteOrgs.refreshEntry",
+        "command": "activeOrgsView.refreshEntry",
         "title": "Refresh",
         "icon": {
           "light": "resources/light/refresh.svg",
@@ -48,20 +48,44 @@
         }
       },
       {
-        "command": "hutteOrgs.takeFromPool",
+        "command": "activeOrgsView.takeFromPool",
         "title": "Take from Pool"
       },
       {
-        "command": "hutteOrgs.openOnHutte",
+        "command": "activeOrgsView.openOnHutte",
         "title": "Open on Hutte"
       },
       {
-        "command": "hutteOrgs.authorize",
+        "command": "activeOrgsView.authorize",
         "title": "Authorize & Set as Default",
         "icon": {
           "light": "resources/light/login.svg",
           "dark": "resources/dark/login.svg"
         }
+      },
+      {
+        "command": "terminatedOrgsView.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "terminatedOrgsView.openOnHutte",
+        "title": "Open on Hutte"
+      },
+      {
+        "command": "poolOrgsView.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "poolOrgsView.openOnHutte",
+        "title": "Open on Hutte"
       }
     ],
     "viewsContainers": {
@@ -76,8 +100,22 @@
     "views": {
       "package-explorer": [
         {
-          "id": "hutteOrgs",
-          "name": "Project",
+          "id": "activeOrgsView",
+          "name": "Project Active Orgs",
+          "icon": "media/Hutte_Logo_Flat.svg",
+          "contextualTitle": "Hutte",
+		      "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && hutte.orgsFound"
+        },
+        {
+          "id": "terminatedOrgsView",
+          "name": "Project Terminated Orgs",
+          "icon": "media/Hutte_Logo_Flat.svg",
+          "contextualTitle": "Hutte",
+		      "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && hutte.orgsFound"
+        },
+        {
+          "id": "poolOrgsView",
+          "name": "Project Pool Orgs",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Hutte",
 		      "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && hutte.orgsFound"
@@ -100,8 +138,16 @@
     },
     "viewsWelcome": [
       {
-        "view": "hutteOrgs",
-        "contents": "Loading Hutte Orgs..."
+        "view": "activeOrgsView",
+        "contents": "Loading Active Hutte Orgs..."
+      },
+      {
+        "view": "terminatedOrgsView",
+        "contents": "Loading Terminated Hutte Orgs..."
+      },
+      {
+        "view": "poolOrgsView",
+        "contents": "Loading Pool Hutte Orgs..."
       },
       {
         "view": "hutteOrgsAuth",
@@ -120,28 +166,38 @@
           "group": "navigation"
         },
         {
-          "command": "hutteOrgs.refreshEntry",
-          "when": "view == hutteOrgs",
+          "command": "activeOrgsView.refreshEntry",
+          "when": "view == activeOrgsView",
           "group": "navigation"
         },
         {
-          "command": "hutteOrgs.takeFromPool",
-          "when": "view == hutteOrgs"
+          "command": "terminatedOrgsView.refreshEntry",
+          "when": "view == terminatedOrgsView",
+          "group": "navigation"
+        },
+        {
+          "command": "poolOrgsView.refreshEntry",
+          "when": "view == poolOrgsView",
+          "group": "navigation"
+        },
+        {
+          "command": "activeOrgsView.takeFromPool",
+          "when": "view == activeOrgsView"
         }
       ],
       "view/item/context": [
         {
-          "command": "hutteOrgs.authorize",
-          "when": "view == hutteOrgs",
+          "command": "activeOrgsView.authorize",
+          "when": "view == activeOrgsView",
           "group": "inline"
         },
         {
-          "command": "hutteOrgs.authorize",
-          "when": "view == hutteOrgs"
+          "command": "activeOrgsView.authorize",
+          "when": "view == activeOrgsView"
         },
         {
-          "command": "hutteOrgs.openOnHutte",
-          "when": "view == hutteOrgs"
+          "command": "activeOrgsView.openOnHutte",
+          "when": "view == activeOrgsView"
         }
       ]
     }

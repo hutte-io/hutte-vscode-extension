@@ -3,6 +3,8 @@ import { commandSync  } from "execa";
 import * as path from 'path';
 import { getRootPath } from './utils';
 
+export type OrgStatus = 'active' | 'terminated' | 'pool';  
+
 export class HutteOrg extends vscode.TreeItem {
 
 	constructor(
@@ -27,20 +29,26 @@ export class HutteOrg extends vscode.TreeItem {
 	contextValue = 'HutteOrg';
 }
 
-export function getOrgs() {
-    const hutteOrgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: getRootPath() }).stdout);
+export function getOrgs(status: OrgStatus) {
+    const orgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: getRootPath() }).stdout);
+	// const orgs = JSON.parse(commandSync(`sfdx hutte:org:list --all --json --verbose`, { cwd: getRootPath() }).stdout);
 
-    if (!hutteOrgs || !hutteOrgs.result || !hutteOrgs.result.length) {
+    if (!orgs || !orgs.result || !orgs.result.length) {
         vscode.commands.executeCommand('setContext', 'hutte.orgsFound', false);
     } else {
         vscode.commands.executeCommand('setContext', 'hutte.orgsFound', true);
     }
 
-    return hutteOrgs.result.map(
-            (hutteOrg: any) => new HutteOrg(hutteOrg.name, hutteOrg.createdBy, hutteOrg.state, hutteOrg.globalId, {
-                command: 'hutteOrgs.openOnHutte',
-                title: 'Open on Hutte',
-                arguments: [hutteOrg]
-            })
+    return orgs.result
+			// .filter(
+			// 	(hutteOrg: any) =>  (hutteOrg.pool === true && status == 'pool') || (!hutteOrg.pool && hutteOrg.status == status)
+			// )
+			.map(
+            	(hutteOrg: any) => new HutteOrg(hutteOrg.name, hutteOrg.createdBy, hutteOrg.state, hutteOrg.globalId, {
+                	command: 'activeOrgsView.openOnHutte',
+                	title: 'Open on Hutte',
+                	arguments: [hutteOrg]
+            	}
+			)
     );
 }

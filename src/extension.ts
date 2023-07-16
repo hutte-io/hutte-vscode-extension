@@ -15,7 +15,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	isGitProjectOpened();
 	isSfdxProjectOpened();
 	const isLoggedIn: Boolean = await isLoggedInHutte();
-	registerSidePanelCommands();
+	registerSidePanelViews();
 	registerStatusBar(context);
 	setStatusBar(isLoggedIn);
 	setPaletteCommands(context);
@@ -29,29 +29,55 @@ async function setPaletteCommands(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('hutte.login', async () => await loginHutte(context))
 	);
 	context.subscriptions.push(
-		vscode.commands.registerCommand('hutte.refreshEmptyProject', async () => await getOrgs())
+		vscode.commands.registerCommand('hutte.refreshEmptyProject', async () => {
+			// TODO: Simplify into 'all'
+			await getOrgs('active');
+			await getOrgs('terminated');
+			await getOrgs('pool');
+		})
 	);
 	context.subscriptions.push(
 		vscode.commands.registerCommand('hutte.takeFromPool', async () => await takeFromPool())
 	);
 }
 
-function registerSidePanelCommands() {
+function registerSidePanelViews() {
 	const rootPath = getRootPath();
 
-	const hutteOrgsProvider = new HutteOrgsProvider(rootPath);
-	vscode.window.createTreeView('hutteOrgs', { treeDataProvider: hutteOrgsProvider });
+	// Active Orgs
+
+	const activeOrgsProvider = new HutteOrgsProvider(rootPath, 'active');
+	vscode.window.createTreeView('activeOrgsView', { treeDataProvider: activeOrgsProvider });
 
 	vscode.commands.registerCommand('hutte.signup', () => vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/sign-up`)));
-	vscode.commands.registerCommand('hutteOrgs.refreshEntry', () => hutteOrgsProvider.refresh());
-	vscode.commands.registerCommand('hutteOrgs.takeFromPool', async () => {
+	vscode.commands.registerCommand('activeOrgsView.refreshEntry', () => activeOrgsProvider.refresh());
+	vscode.commands.registerCommand('activeOrgsView.takeFromPool', async () => {
 		await takeFromPool();
-		hutteOrgsProvider.refresh();
+		activeOrgsProvider.refresh();
 	});
-	vscode.commands.registerCommand('hutteOrgs.authorize', async (hutteOrg: HutteOrg) => await authorizeOrg(hutteOrg.label));
-	vscode.commands.registerCommand('hutteOrgs.openOnHutte', hutteOrg => {
-		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${hutteOrg.globalId}`));
+	vscode.commands.registerCommand('activeOrgsView.authorize', async (org: HutteOrg) => await authorizeOrg(org.label));
+	vscode.commands.registerCommand('activeOrgsView.openOnHutte', org => {
+		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${org.globalId}`));
 	});
+
+	// Terminated Orgs
+	const terminatedOrgsProvider = new HutteOrgsProvider(rootPath, 'terminated');
+	vscode.window.createTreeView('terminatedOrgsView', { treeDataProvider: terminatedOrgsProvider });
+
+	vscode.commands.registerCommand('terminatedOrgsView.refreshEntry', () => terminatedOrgsProvider.refresh());
+	vscode.commands.registerCommand('terminatedOrgsView.openOnHutte', org => {
+		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${org.globalId}`));
+	});
+
+	// Pool Orgs
+	const poolOrgsProvider = new HutteOrgsProvider(rootPath, 'terminated');
+	vscode.window.createTreeView('poolOrgsView', { treeDataProvider: poolOrgsProvider });
+
+	vscode.commands.registerCommand('poolOrgsView.refreshEntry', () => poolOrgsProvider.refresh());
+	vscode.commands.registerCommand('poolOrgsView.openOnHutte', org => {
+		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${org.globalId}`));
+	});
+
 }
 
 function initVsCodeContextVars() {
