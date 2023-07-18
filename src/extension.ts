@@ -13,13 +13,16 @@ import { registerStatusBar, updateStatusBar } from './statusBar';
 export async function activate(context: vscode.ExtensionContext) {
 	initVsCodeContextVars();
 	isMinimumHutteCliVersion();
-	isGitProjectOpened();
-	isSfdxProjectOpened();
-	const isLoggedIn: Boolean = await isLoggedInHutte();
-	registerSidePanelCommands();
-	registerStatusBar(context);
-	setStatusBar(isLoggedIn);
-	setPaletteCommands(context);
+	const isGitProject: Boolean = isGitProjectOpened();
+	const isSfdxProject: Boolean = isSfdxProjectOpened();
+
+	if (isGitProject && isSfdxProject) {
+		const isLoggedIn: Boolean = await isLoggedInHutte();
+		registerSidePanelCommands();
+		registerStatusBar(context);
+		setStatusBar(isLoggedIn);
+		setPaletteCommands(context);
+	}
 }
 
 // This method is called when your extension is deactivated
@@ -76,19 +79,23 @@ function isMinimumHutteCliVersion() {
 	
 }
 
-function isSfdxProjectOpened() {
+function isSfdxProjectOpened(): Boolean {
 	if (fs.existsSync(path.join(getRootPath()!, 'sfdx-project.json'))) {
 		vscode.commands.executeCommand('setContext', 'hutte.sfdxProjectOpened', true);
+		return true;
 	} else {
 		vscode.commands.executeCommand('setContext', 'hutte.sfdxProjectOpened', false);
+		return false;
 	}
 }
 
-function isGitProjectOpened() {
+function isGitProjectOpened(): Boolean {
 	if (fs.existsSync(path.join(getRootPath()!, '.git'))) {
 		vscode.commands.executeCommand('setContext', 'hutte.gitProjectOpened', true);
+		return true;
 	} else {
 		vscode.commands.executeCommand('setContext', 'hutte.gitProjectOpened', false);
+		return false;
 	}
 }
 
