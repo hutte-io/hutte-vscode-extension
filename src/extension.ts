@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { HutteOrgsProvider } from './hutteOrgsProvider';
 import { HutteOrg, getOrgs } from './hutteOrg';
-import { commandSync  } from "execa";
+import { commandSync } from "execa";
 import { loginHutte, takeFromPool, authorizeOrg } from './commands';
 import { getRootPath, getUserInfo } from './utils';
 import { registerStatusBar, updateStatusBar } from './statusBar';
@@ -12,6 +12,7 @@ import { registerStatusBar, updateStatusBar } from './statusBar';
 // This method is called when your extension is activated
 export async function activate(context: vscode.ExtensionContext) {
 	initVsCodeContextVars();
+	isMinimumHutteCliVersion();
 	isGitProjectOpened();
 	isSfdxProjectOpened();
 	const isLoggedIn: Boolean = await isLoggedInHutte();
@@ -57,6 +58,22 @@ function registerSidePanelCommands() {
 function initVsCodeContextVars() {
 	vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
 	vscode.commands.executeCommand('setContext', 'hutte.orgsFound', true);
+	vscode.commands.executeCommand('setContext', 'hutte.correctHutteCli', true);
+}
+
+function isMinimumHutteCliVersion() {
+	try {
+		const hutteCliDetails: any = JSON.parse(commandSync('sfdx plugins:inspect hutte --json').stdout);
+
+		if (+hutteCliDetails[0].pjson.version.replaceAll('.', '') >= 110) {
+			vscode.commands.executeCommand('setContext', 'hutte.correctHutteCli', true);
+		} else {
+			vscode.commands.executeCommand('setContext', 'hutte.correctHutteCli', false);
+		}
+	} catch (err) {
+		vscode.commands.executeCommand('setContext', 'hutte.correctHutteCli', false);
+	} 
+	
 }
 
 function isSfdxProjectOpened() {

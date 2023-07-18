@@ -80,21 +80,28 @@
           "name": "Project",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Hutte",
-		      "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && hutte.orgsFound"
+		      "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && hutte.correctHutteCli && hutte.orgsFound"
         },
         {
           "id": "hutteOrgsAuth",
           "name": "Authorization Required",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Authorization Required",
-          "when": "!hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened"
+          "when": "!hutte.IsLogged && hutte.gitProjectOpened && hutte.correctHutteCli && hutte.sfdxProjectOpened"
         },
         {
           "id": "hutteNoOrgsFound",
           "name": "No Hutte Orgs Found",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "No Hutte Orgs Found",
-          "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && !hutte.orgsFound"
+          "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.correctHutteCli && hutte.sfdxProjectOpened && !hutte.orgsFound"
+        },
+        {
+          "id": "hutteIncorrectCli",
+          "name": "Extension Prerequisites",
+          "icon": "media/Hutte_Logo_Flat.svg",
+          "contextualTitle": "Extension Prerequisites",
+          "when": "hutte.gitProjectOpened && hutte.sfdxProjectOpened && !hutte.correctHutteCli"
         }
       ]
     },
@@ -110,6 +117,10 @@
       {
         "view": "hutteNoOrgsFound",
         "contents": "No Hutte Orgs were found for this repository. There are two possible reasons:\n1. This repository is not connected to a project in your Hutte account.\n2. Your Hutte project does not contain any active orgs."
+      },
+      {
+        "view": "hutteIncorrectCli",
+        "contents": "To use Hutte VSCode Extension, ensure the prerequisites are met:\n- [SFDX CLI](https://developer.salesforce.com/tools/sfdxcli)\n- [Hutte SFDX Plugin (minimum 1.1.0 version)](https://docs.hutte.io/en/articles/6836945-hutte-sfdx-plugin). If have already installed a lower version of Hutte Plugin, run 'sfdx plugins:install hutte@1.2.0' (1.2.0 or more recent version) to upgrade it.\nAfter installing the required tools, restart your VSCode instance to use the Hutte Extension."
       }
     ],
     "menus": {
