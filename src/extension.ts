@@ -44,40 +44,37 @@ async function setPaletteCommands(context: vscode.ExtensionContext) {
 function registerSidePanelViews() {
 	const rootPath = getRootPath();
 
-	// Active Orgs
-
 	const activeOrgsProvider = new HutteOrgsProvider(rootPath, 'active');
-	vscode.window.createTreeView('activeOrgsView', { treeDataProvider: activeOrgsProvider });
+	const terminatedOrgsProvider = new HutteOrgsProvider(rootPath, 'terminated');
+	const poolOrgsProvider = new HutteOrgsProvider(rootPath, 'pool');
 
+	// Active Orgs
+	vscode.window.createTreeView('activeOrgsView', { treeDataProvider: activeOrgsProvider });
 	vscode.commands.registerCommand('hutte.signup', () => vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/sign-up`)));
 	vscode.commands.registerCommand('activeOrgsView.refreshEntry', () => activeOrgsProvider.refresh());
 	vscode.commands.registerCommand('activeOrgsView.takeFromPool', async () => {
 		await takeFromPool();
 		activeOrgsProvider.refresh();
+		terminatedOrgsProvider.refresh();
 	});
 	vscode.commands.registerCommand('activeOrgsView.authorize', async (org: HutteOrg) => await authorizeOrg(org.label));
 	vscode.commands.registerCommand('activeOrgsView.openOnHutte', org => {
 		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${org.globalId}`));
 	});
 
-	// Terminated Orgs
-	const terminatedOrgsProvider = new HutteOrgsProvider(rootPath, 'terminated');
-	vscode.window.createTreeView('terminatedOrgsView', { treeDataProvider: terminatedOrgsProvider });
-
-	vscode.commands.registerCommand('terminatedOrgsView.refreshEntry', () => terminatedOrgsProvider.refresh());
-	vscode.commands.registerCommand('terminatedOrgsView.openOnHutte', org => {
-		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${org.globalId}`));
-	});
-
 	// Pool Orgs
-	const poolOrgsProvider = new HutteOrgsProvider(rootPath, 'terminated');
 	vscode.window.createTreeView('poolOrgsView', { treeDataProvider: poolOrgsProvider });
-
 	vscode.commands.registerCommand('poolOrgsView.refreshEntry', () => poolOrgsProvider.refresh());
 	vscode.commands.registerCommand('poolOrgsView.openOnHutte', org => {
 		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${org.globalId}`));
 	});
-
+	
+	// Terminated Orgs
+	vscode.window.createTreeView('terminatedOrgsView', { treeDataProvider: terminatedOrgsProvider });
+	vscode.commands.registerCommand('terminatedOrgsView.refreshEntry', () => terminatedOrgsProvider.refresh());
+	vscode.commands.registerCommand('terminatedOrgsView.openOnHutte', org => {
+		vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`https://app2.hutte.io/scratch-orgs/${org.globalId}`));
+	});
 }
 
 function initVsCodeContextVars() {

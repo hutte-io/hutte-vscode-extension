@@ -30,8 +30,7 @@ export class HutteOrg extends vscode.TreeItem {
 }
 
 export function getOrgs(status: OrgStatus) {
-    const orgs = JSON.parse(commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: getRootPath() }).stdout);
-	// const orgs = JSON.parse(commandSync(`sfdx hutte:org:list --all --json --verbose`, { cwd: getRootPath() }).stdout);
+	const orgs = JSON.parse(commandSync(`sfdx hutte:org:list --all --json --verbose`, { cwd: getRootPath() }).stdout);
 
     if (!orgs || !orgs.result || !orgs.result.length) {
         vscode.commands.executeCommand('setContext', 'hutte.orgsFound', false);
@@ -40,9 +39,9 @@ export function getOrgs(status: OrgStatus) {
     }
 
     return orgs.result
-			// .filter(
-			// 	(hutteOrg: any) =>  (hutteOrg.pool === true && status == 'pool') || (!hutteOrg.pool && hutteOrg.status == status)
-			// )
+			.filter(
+				(hutteOrg: any) =>  (hutteOrg.pool === true && status === 'pool') || (!hutteOrg.pool && hutteOrg.state === status)
+			)
 			.map(
             	(hutteOrg: any) => new HutteOrg(hutteOrg.name, hutteOrg.createdBy, hutteOrg.state, hutteOrg.globalId, {
                 	command: 'activeOrgsView.openOnHutte',

@@ -107,15 +107,15 @@
 		      "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && hutte.orgsFound"
         },
         {
-          "id": "terminatedOrgsView",
-          "name": "Project Terminated Orgs",
+          "id": "poolOrgsView",
+          "name": "Project Pool Orgs",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Hutte",
 		      "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && hutte.orgsFound"
         },
         {
-          "id": "poolOrgsView",
-          "name": "Project Pool Orgs",
+          "id": "terminatedOrgsView",
+          "name": "Project Terminated Orgs",
           "icon": "media/Hutte_Logo_Flat.svg",
           "contextualTitle": "Hutte",
 		      "when": "hutte.IsLogged && hutte.gitProjectOpened && hutte.sfdxProjectOpened && hutte.orgsFound"
@@ -198,6 +198,14 @@
         {
           "command": "activeOrgsView.openOnHutte",
           "when": "view == activeOrgsView"
+        },
+        {
+          "command": "poolOrgsView.openOnHutte",
+          "when": "view == poolOrgsView"
+        },
+        {
+          "command": "terminatedOrgsView.openOnHutte",
+          "when": "view == terminatedOrgsView"
         }
       ]
     }
