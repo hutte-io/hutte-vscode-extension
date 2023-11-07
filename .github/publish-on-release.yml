@@ -17,7 +17,7 @@ jobs:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
 
   publish-to-openvsx:
-    name: 'Publish to Open VSX'
+    name: 'Publish to Open VSX Registry'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
