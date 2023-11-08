@@ -66,7 +66,7 @@ function initVsCodeContextVars() {
 
 function isMinimumHutteCliVersion() {
 	try {
-		const hutteCliDetails: any = JSON.parse(commandSync('sfdx plugins:inspect hutte --json').stdout);
+		const hutteCliDetails: any = JSON.parse(commandSync('sf plugins inspect hutte --json').stdout);
 
 		if (+hutteCliDetails[0].pjson.version.replaceAll('.', '') >= 110) {
 			vscode.commands.executeCommand('setContext', 'hutte.correctHutteCli', true);
@@ -101,7 +101,7 @@ function isGitProjectOpened(): Boolean {
 
 async function isLoggedInHutte(): Promise<Boolean> {
 	try {
-		commandSync(`sfdx hutte:org:list --json --verbose`, { cwd: getRootPath() });
+		commandSync(`sf hutte org list --json --verbose`, { cwd: getRootPath() });
 		vscode.commands.executeCommand('setContext', 'hutte.IsLogged', true);
 		return true;
 	} catch(err){

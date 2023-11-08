@@ -14,7 +14,7 @@ export async function loginHutte(context: vscode.ExtensionContext) {
         cancellable: false
     }, async () => {        
         try {
-            const output = commandSync(`sfdx hutte:auth:login --email ${email} --password ${password}`, { cwd: getRootPath() });
+            const output = commandSync(`sf hutte auth login --email ${email} --password ${password}`, { cwd: getRootPath() });
             if (output.stdout.includes('Invalid credentials')) {
                 throw new Error(output.stdout);
             } else {
@@ -33,9 +33,9 @@ export async function loginHutte(context: vscode.ExtensionContext) {
 export async function takeFromPool() {
 	const poolName = await vscode.window.showInputBox({title: 'Set Org Name (If empty, the default name will be set)', ignoreFocusOut: true });
 	const takeFromPoolCommand = poolName ? 
-		`sfdx hutte:pool:take --name ${poolName} --wait --json`
+		`sf hutte pool take --name ${poolName} --wait --json`
 		:
-		`sfdx hutte:pool:take --wait --json`;
+		`sf hutte pool take --wait --json`;
 
 	await vscode.window.withProgress({
 		location: vscode.ProgressLocation.Notification,
