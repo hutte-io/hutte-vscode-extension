@@ -120,7 +120,7 @@
       },
       {
         "view": "hutteIncorrectCli",
-        "contents": "To use Hutte VSCode Extension, ensure the prerequisites are met:\n- [SFDX CLI](https://developer.salesforce.com/tools/sfdxcli)\n- [Hutte SFDX Plugin (minimum 1.1.0 version)](https://docs.hutte.io/en/articles/6836945-hutte-sfdx-plugin). If have already installed a lower version of Hutte Plugin, run 'sfdx plugins:install hutte@1.2.0' (1.2.0 or more recent version) to upgrade it.\nAfter installing the required tools, restart your VSCode instance to use the Hutte Extension."
+        "contents": "To use Hutte VSCode Extension, ensure the prerequisites are met:\n- [SFDX CLI](https://developer.salesforce.com/tools/sfdxcli)\n- [Hutte SFDX Plugin (minimum 2.0.2)](https://docs.hutte.io/en/articles/6836945-hutte-sfdx-plugin). If have already installed a lower version of Hutte Plugin, run 'sf plugins install hutte@2.0.2' (2.0.2 or more recent version) to upgrade it.\nAfter installing the required tools, restart your VSCode instance to use the Hutte Extension."
       }
     ],
     "menus": {
