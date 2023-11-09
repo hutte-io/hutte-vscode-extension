@@ -4,11 +4,11 @@ Allows you to use Hutte capabilities from your VSCode application, without havin
 
 ## Pre-requisites
 
-- [SFDX CLI](https://developer.salesforce.com/tools/sfdxcli)
-- [Hutte CLI](https://github.com/hutte-io/cli), check [this article](https://docs.hutte.io/en/articles/6836945-hutte-sfdx-plugin) for more information. Make sure the version of Hutte plugin is equal or bigger than `1.1.0`.
+- [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli)
+- [Hutte CLI](https://github.com/hutte-io/cli), check [this article](https://docs.hutte.io/en/articles/6836945-hutte-sfdx-plugin) for more information. Make sure the version of Hutte plugin is equal or bigger than `2.1.0`.
   - Upgrading Hutte CLI:
-    - To check the current version of Hutte plugin, use `sfdx plugins:inspect hutte`
-    - To upgrade to 1.1.0, use `sfdx plugins:install hutte@1.1.0`
+    - To check the current version of Hutte plugin, use `sf plugins inspect hutte`
+    - To upgrade to 2.1.0, use `sf plugins install hutte@2.1.0`
 - [Hutte account](https://hutte.io/trails/signup/)
 
 ## Features
@@ -30,9 +30,13 @@ Allows you to use Hutte capabilities from your VSCode application, without havin
 
 ## Release Notes
 
+### 1.1.0
+
+*Added compatibility with Salesforce Code Builder, GitHub Workspaces and the Windows operating system, through the usage of the new `--org-name` flag in `sf hutte org authorize` command, which allows to remove the `bash` dependency in command execution
+
 ### 1.0.0
 
-First version of the extension
+*First version of the extension
 
 ## Feedback and Bug Reports
 
