@@ -33,7 +33,7 @@ export function getUserInfo(): Promise<IUserInfo> {
 		  });
 		} catch {
 		  reject(
-			'You need to authorize the client before. Run `$ sfdx hutte:auth:login -h` for more information.',
+			'You need to authorize the client before. Run `$ sf hutte auth login -h` for more information.',
 		  );
 		}
 	});
