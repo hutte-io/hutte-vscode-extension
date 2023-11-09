@@ -68,7 +68,7 @@ function isMinimumHutteCliVersion() {
 	try {
 		const hutteCliDetails: any = JSON.parse(commandSync('sfdx plugins:inspect hutte --json').stdout);
 
-		if (+hutteCliDetails[0].pjson.version.replaceAll('.', '') >= 110) {
+		if (+hutteCliDetails[0].pjson.version.replaceAll('.', '') >= 210) {
 			vscode.commands.executeCommand('setContext', 'hutte.correctHutteCli', true);
 		} else {
 			vscode.commands.executeCommand('setContext', 'hutte.correctHutteCli', false);
